@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#244b79">
+  <meta name="description" content="个人视觉图鉴：把风格、运动、光影和提示词收在一起，组合成自己的视频语言。">
+  <title>我的视觉图鉴</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="app.css">
+  <script src="data.js" defer></script>
+  <script src="runtime.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到图鉴</a>
+  <aside class="sidebar">
+    <a class="brand" href="#motion"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M5 7h24v18H5zM11 13h20v16H11z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16 17 8 4-8 4z" fill="currentColor"/></svg><span>我的视觉图鉴<small>把喜欢的画面变成自己的语言</small></span></a>
+    <nav id="navigation" aria-label="主导航">
+      <button data-page="motion" class="nav-item active"><span>◈</span> 动效与光影 <b id="motion-count"></b></button>
+      <button data-page="style" class="nav-item"><span>▧</span> 视觉风格 <b id="style-count"></b></button>
+      <button data-page="studio" class="nav-item"><span>⊞</span> 组合工作台</button>
+      <button data-page="mine" class="nav-item"><span>♡</span> 我的积累 <b id="mine-count"></b></button>
+      <button data-page="sources" class="nav-item"><span>↗</span> 来源与用法</button>
+    </nav>
+    <section class="side-note"><h2>先看懂，再组合</h2><p>风格决定画面长什么样，动作决定元素怎么动。选好参考，再交给 Codex 制作。</p></section>
+    <div class="side-bottom"><button class="quiet" id="backup-open">备份与导入</button><a href="https://github.com/kate19960208/motion-atlas" target="_blank" rel="noopener">GitHub 源码</a><small>收藏、备注与自建参考保存在当前浏览器。换设备前请导出备份。</small></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span id="breadcrumb">视觉图鉴 / 动效与光影</span><div><button class="quiet mobile-backup" id="backup-mobile">备份</button><button class="quiet" id="pause-all" aria-pressed="false">暂停预览</button><button class="primary" id="add-open">＋ 添加参考</button></div></header>
+    <main id="main" tabindex="-1">
+      <div class="page-heading"><div><h1 id="page-title">先看见，才说得清。</h1><p id="page-intro">看动态示例、查运动参数，把想要的效果准确交给 AI。</p></div><span class="snapshot" id="snapshot"></span></div>
+      <section id="library-view">
+        <div class="library-tools"><label class="search"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><input id="search" type="search" placeholder="搜索中文名称、动作、用途或编号" aria-label="搜索图鉴"></label><select id="source-filter" aria-label="按来源筛选"><option value="all">全部来源</option></select><label class="check"><input type="checkbox" id="favorites-only">只看收藏</label><label class="check" id="white-control"><input type="checkbox" id="white-mode">白模去色预览</label></div>
+        <div class="categories" id="categories" aria-label="分类筛选"></div>
+        <div class="result-row"><p id="result-count" role="status"></p><label>每页 <select id="page-size" aria-label="每页条数"><option>12</option><option selected>24</option><option>48</option></select></label></div>
+        <div class="grid" id="grid"></div>
+        <div class="empty" id="empty" hidden><h2>暂时没有匹配的参考</h2><p>试试其他词，或清除筛选。也可以添加你自己的案例。</p><button id="reset-filters">清除筛选</button></div>
+        <nav class="pagination" id="pagination" aria-label="分页"></nav>
+      </section>
+      <section id="studio-view" hidden></section>
+      <section id="sources-view" hidden></section>
+    </main>
+  </div>
+  <aside class="selection-tray" id="selection-tray" hidden aria-label="已选参考"><p id="selection-count"></p><div><button id="selection-clear" class="quiet">清空</button><button id="selection-copy" class="primary">复制所选提示词</button><button id="selection-studio">去组合</button></div></aside>
+  <dialog id="detail" class="detail"><div class="dialog-bar"><span id="detail-source"></span><button class="icon-button" data-close="detail" aria-label="关闭详情">×</button></div><div id="detail-content"></div></dialog>
+  <dialog id="add-dialog" class="form-dialog"><div class="dialog-bar"><h2>添加自己的参考</h2><button class="icon-button" data-close="add-dialog" aria-label="关闭添加参考">×</button></div><form id="add-form"><label>名称<input name="name" required maxlength="100" placeholder="例如：产品细节的缓慢推进"></label><div class="form-pair"><label>类型<select name="kind"><option value="motion">动效</option><option value="style">风格</option></select></label><label>标签<input name="tags" placeholder="产品、推镜头、克制"></label></div><label>来源链接<input name="url" type="url" placeholder="https://…"></label><label>参考图或视频链接<input name="media" type="url" placeholder="可选，公开图片或 MP4 的链接"></label><label>喜欢什么，适合用在哪<textarea name="description" rows="3" maxlength="1500"></textarea></label><label>提示词<textarea name="prompt" rows="5" required maxlength="15000" placeholder="写清主体、动作、时长、缓动和风格"></textarea></label><p class="form-help">参考会保存到当前浏览器；可通过“备份与导入”导出。链接和描述由你管理。</p><button class="primary" type="submit">保存参考</button></form></dialog>
+  <dialog id="backup-dialog" class="form-dialog"><div class="dialog-bar"><h2>备份与导入</h2><button class="icon-button" data-close="backup-dialog" aria-label="关闭备份">×</button></div><div class="dialog-padding"><p>导出收藏、备注、自建参考、组合方案和个人配色。导入会按编号合并，保留已有内容。</p><div class="button-row"><button id="export-data" class="primary">导出我的积累</button><button id="import-data">导入 JSON 备份</button><input type="file" id="import-file" accept="application/json,.json" hidden></div><p class="form-help">在线图鉴部署在 GitHub Pages。个人积累保存在浏览器本地，当前版本不自动跨设备同步。不会要求填写 GitHub Token。</p><p id="backup-status" role="status"></p></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

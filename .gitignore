@@ -1,0 +1,6 @@
+.env
+.env.*
+node_modules/
+*个人积累*.json
+*.log
+.DS_Store
